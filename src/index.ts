@@ -3,7 +3,9 @@ import 'dotenv/config';
 import {Recipe} from './seqconfig';
 import bodyParser from "body-parser";
 import { IntegerDataType } from "sequelize";
+import cors from "cors";
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 const port = process.env.PORT ? parseInt(process.env.PORT as string) : 3030
 
@@ -23,6 +25,14 @@ interface IMaRequetBody {
     console.log(maRecette);
     Recipe.create(maRecette);
     res.json(maRecette);
+  })
+
+  app.delete("/delete-recipe/:id", async (req, res) => {
+    await Recipe.destroy({
+        where: {id: req.params.id }
+    });
+
+    res.send('ok');
   })
 
 app.get('/random-between/:min/:max', (req, res) => {
